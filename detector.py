@@ -35,7 +35,7 @@ def create_model():
     model = Model(inputs=model.input, outputs=output(model.output))
 
     model.compile(
-        optimizer=optimizers.Adam(lr=1e-4),
+        optimizer=optimizers.Adam(lr=1e-5),
         loss='binary_crossentropy',
         metrics=['accuracy']
     )
@@ -50,7 +50,10 @@ def preprocess(img):
 
 
 def load_data(data_path, *, batch_size):
-    data_gen = ImageDataGenerator(preprocessing_function=preprocess)
+    data_gen = ImageDataGenerator(
+        preprocessing_function=preprocess,
+        horizontal_flip=True,
+    )
 
     train_path = os.path.join(data_path, 'train')
     print('Loading {}...'.format(train_path))
@@ -101,7 +104,7 @@ def fit_model(data_path, batch_size):
     model.fit_generator(
         data,
         steps_per_epoch=data_size // batch_size,
-        epochs=5,
+        epochs=10,
         verbose=1
     )
 
